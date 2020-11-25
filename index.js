@@ -1,60 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const { Client } = require('./models');
+
+const indexRouter = require('./routes/index');
+const clientsRouter = require('./routes/clients');
+const productsRouter = require('./routes/products');
 
 app.use(bodyParser.json());
 
-app.get('/', async (req, res) => {
-    res.send("Projeto em execução...");
-});
+app.use('/', indexRouter);
+app.use('/clients', clientsRouter);
+app.use('/products', productsRouter);
 
-// Inserção de dados
-app.post('/clients', async (req, res) => {
-    const client = await Client.create(req.body);
-    res.json(client);
-});
-
-// Listagem de todos os dados
-app.get('/clients', async (req, res)=> {
-    const clients = await Client.findAll();
-    res.json(clients);
-});
-
-// Remoção de dados
-app.delete('/clients/:id', async(req, res) => {
-    const status = await Client.destroy(
-        {
-            where:{
-                id: req.params.id
-            }
-        }
-    );
-    res.json(status);
-});
-
-// Atualização de dados
-app.put('/clients/:id', async(req, res) => {
-    const client = await Client.update(req.body,
-        {
-            where:{
-                id: req.params.id
-            }
-        }    
-    );
-    res.json(client);
-});
-
-// Listar dado unico
-app.get('/clients/:id', async (req, res) => {
-    const client = await Client.findAll(
-        {
-            where:{
-                id:req.params.id
-            }
-        }
-    );
-    res.json(...client);
-})
-
-app.listen(3000);
+app.listen(4000);
